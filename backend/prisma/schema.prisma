@@ -17,57 +17,75 @@ enum Source {
   SELF_SIGNUP
   INVITATION
 }
+
 enum PostType {
   ARTICLE
   ANNOUNCEMENT
   EVENT
 }
+
 model User {
-  id                           String       @id @default(uuid())
-  source                       Source       @default(SELF_SIGNUP)
-  email                        String       @unique
+  id                           String    @id @default(uuid())
+  source                       Source    @default(SELF_SIGNUP)
+  email                        String    @unique
   hashedPassword               String?
   firstName                    String?
   lastName                     String?
-  onboarded                    Boolean      @default(false)
-  emailConfirmationToken       String?      @unique
+  onboarded                    Boolean   @default(false)
+  emailConfirmationToken       String?   @unique
   emailConfirmationTokenSentAt DateTime?
-  emailConfirmed               Boolean      @default(false)
-  passResetToken               String?      @unique
+  emailConfirmed               Boolean   @default(false)
+  passResetToken               String?   @unique
   passResetTokenCreatedAt      DateTime?
-  createdAt                    DateTime     @default(now())
-  updatedAt                    DateTime     @updatedAt
-  memberships                  Membership[]
+  createdAt                    DateTime  @default(now())
+  updatedAt                    DateTime  @updatedAt
+
+  articles      Article[]
+  announcements Announcement[]
+  events        Event[]
 }
+
 model Article {
-  id        String   @id @default(uuid())
-  title     String
-  content   String
-  status    String
-  userId    String
-  creator   User     @relation(fields: [userId], references: [id])
-  comments  Comment[]
+  id       String    @id @default(uuid())
+  title    String
+  content  String
+  status   String
+  userId   String
+  creator  User      @relation(fields: [userId], references: [id])
+  comments Comment[] @relation("ArticleComments")
 }
+
 model Announcement {
-  id        String   @id @default(uuid())
-  title     String
-  content   String
-  userId    String
-  creator   User     @relation(fields: [userId], references: [id])
-  comments  Comment[]
+  id       String    @id @default(uuid())
+  title    String
+  content  String
+  userId   String
+  creator  User      @relation(fields: [userId], references: [id])
+  comments Comment[] @relation("AnnouncementComments")
 }
+
 model Event {
-  id        String   @id @default(uuid())
-  name      String
-  date      DateTime
-  userId    String
-  creator   User     @relation(fields: [userId], references: [id])
-  comments  Comment[]
+  id       String    @id @default(uuid())
+  name     String
+  date     DateTime
+  // capacity
+  // who has signed up
+  userId   String
+  creator  User      @relation(fields: [userId], references: [id])
+  comments Comment[] @relation("EventComments")
 }
+
 model Comment {
-  id        String   @id @default(uuid())
-  title     String
-  content   String
-  postType  PostType
-  postId    String
+  id      String @id @default(uuid())
+  title   String
+  content String
+
+  articleId String?
+  article   Article? @relation("ArticleComments", fields: [articleId], references: [id])
+
+  announcementId String?
+  announcement   Announcement? @relation("AnnouncementComments", fields: [announcementId], references: [id])
+
+  eventId String?
+  event   Event?  @relation("EventComments", fields: [eventId], references: [id])
 }
