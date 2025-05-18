@@ -17,7 +17,11 @@ enum Source {
   SELF_SIGNUP
   INVITATION
 }
-
+enum PostType {
+  ARTICLE
+  ANNOUNCEMENT
+  EVENT
+}
 model User {
   id                           String       @id @default(uuid())
   source                       Source       @default(SELF_SIGNUP)
@@ -35,79 +39,35 @@ model User {
   updatedAt                    DateTime     @updatedAt
   memberships                  Membership[]
 }
-
-model Comment {
-  id        String  @id @default(uuid())
-  content   String
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  String
-  article   Article @relation(fields: [articleId], references: [id])
-  articleId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Announcement {
-  id          String   @id @default(uuid())
-  title       String
-  content     String
-  publishedAt DateTime @default(now())
-  author      User     @relation(fields: [authorId], references: [id])
-  authorId    String
-}
-
 model Article {
-  id        String    @id @default(uuid())
+  id        String   @id @default(uuid())
   title     String
   content   String
-  author    User      @relation(fields: [authorId], references: [id])
-  authorId  String
+  status    String
+  userId    String
+  creator   User     @relation(fields: [userId], references: [id])
   comments  Comment[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
 }
-
+model Announcement {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  userId    String
+  creator   User     @relation(fields: [userId], references: [id])
+  comments  Comment[]
+}
 model Event {
   id        String   @id @default(uuid())
   name      String
-  location  String
   date      DateTime
-  organizer User     @relation(fields: [organizerId], references: [id])
-  organizerId String
+  userId    String
+  creator   User     @relation(fields: [userId], references: [id])
+  comments  Comment[]
 }
-
-
-// Delete these
-
-model Organization {
-  id          String       @id @default(uuid())
-  name        String       @unique
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  memberships Membership[]
-}
-
-enum Role {
-  OWNER
-  MEMBER
-}
-
-enum MembershipStatus {
-  INVITED
-  ACTIVE
-  INACTIVE
-}
-
-model Membership {
-  id               String       @id @default(uuid())
-  role             Role         @default(OWNER)
-  status           MembershipStatus @default(ACTIVE)
-  invitationToken  String?      @unique
-  invitationSentAt DateTime?
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
-  userId           String
-  organizationId   String
-  user             User         @relation(fields: [userId], references: [id])
-  organization     Organization @relation(fields: [organizationId], references: [id])
+model Comment {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  postType  PostType
+  postId    String
 }
