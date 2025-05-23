@@ -53,6 +53,7 @@ model Article {
   userId   String
   creator  User      @relation(fields: [userId], references: [id])
   comments Comment[] @relation("ArticleComments")
+  createdAt DateTime @default(now())
 }
 
 model Announcement {
@@ -62,17 +63,20 @@ model Announcement {
   userId   String
   creator  User      @relation(fields: [userId], references: [id])
   comments Comment[] @relation("AnnouncementComments")
+  createdAt DateTime @default(now())
 }
 
 model Event {
   id       String    @id @default(uuid())
   name     String
   date     DateTime
+  content  String
   // capacity
   // who has signed up
   userId   String
   creator  User      @relation(fields: [userId], references: [id])
   comments Comment[] @relation("EventComments")
+  createdAt DateTime @default(now())
 }
 
 model Comment {
