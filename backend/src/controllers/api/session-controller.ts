@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import AuthService from '@/domain/auth/auth-service';
+import AuthService from '@/services/auth_service';
 import { User } from '@prisma/client';
 import {
   CreateSessionRequestSchema,
@@ -30,7 +30,7 @@ export default class SessionController {
     } else if (provider === 'google') {
       user = await this.authService.authenticateWithGoogle(params.token);
     } else if (provider === 'invitation') {
-      user = await this.authService.authenticateWithInvitation(params.token);
+      // user = await this.authService.authenticateWithInvitation(params.token);
     } else {
       throw new Error('Invalid provider');
     }

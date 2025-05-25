@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import AuthService from '@/domain/auth/auth-service';
+import AuthService from '@/services/auth_service';
 import { CreateUserRequestSchema, CreateUserResponseSchema, UpdateUserRequestSchema, UpdateUserResponseSchema } from 'api-types';
 import { decorate, decorateWithAuth } from '@/utils';
 

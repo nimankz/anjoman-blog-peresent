@@ -24,10 +24,16 @@ enum PostType {
   EVENT
 }
 
+enum UserRole {
+  ADMIN
+  USER
+}
+
 model User {
   id                           String    @id @default(uuid())
   source                       Source    @default(SELF_SIGNUP)
   email                        String    @unique
+  role                         UserRole  @default(USER)
   hashedPassword               String?
   firstName                    String?
   lastName                     String?
@@ -45,11 +51,17 @@ model User {
   events        Event[]
 }
 
+enum ArticleStatus {
+  SUBMITTED
+  REJECTED
+  ACCEPTED
+}
+
 model Article {
   id       String    @id @default(uuid())
   title    String
   content  String
-  status   String
+  status   ArticleStatus @default(SUBMITTED)
   userId   String
   creator  User      @relation(fields: [userId], references: [id])
   comments Comment[] @relation("ArticleComments")

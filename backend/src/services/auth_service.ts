@@ -247,32 +247,32 @@ export default class AuthService {
     return user;
   }
 
-  public async authenticateWithInvitation(invitationToken: string): Promise<User> {
-    const membership = await prisma.membership.findUnique({
-      where: { invitationToken },
-      include: {
-        user: true,
-      },
-    });
+  // public async authenticateWithInvitation(invitationToken: string): Promise<User> {
+  //   const membership = await prisma.membership.findUnique({
+  //     where: { invitationToken },
+  //     include: {
+  //       user: true,
+  //     },
+  //   });
 
-    if (!membership) {
-      throw new Error('Invalid invitation token');
-    }
+  //   if (!membership) {
+  //     throw new Error('Invalid invitation token');
+  //   }
 
-    await withTransaction(tx => {
-      tx.membership.update({
-        where: { id: membership.id },
-        data: {
-          invitationToken: null,
-          invitationSentAt: null,
-        },
-      });
+  //   await withTransaction(tx => {
+  //     tx.membership.update({
+  //       where: { id: membership.id },
+  //       data: {
+  //         invitationToken: null,
+  //         invitationSentAt: null,
+  //       },
+  //     });
 
-      return this.confirmUserEmail(membership.user);
-    });
+  //     return this.confirmUserEmail(membership.user);
+  //   });
 
-    return membership.user;
-  }
+  //   return membership.user;
+  // }
 
 
   private async confirmUserEmail(user: User) {

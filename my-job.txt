@@ -15,12 +15,12 @@ DELETE
 
 --------------------
 
-Signup 
+Signup
   POST /users (data in body: email, pass, name)
-login  
+login
   POST /sessions (data in body: user, pass)
 
-Suppose that the first 
+Suppose that the first
 
 get list of announcements for every user.
   GET /announcements
@@ -59,3 +59,21 @@ See all users by admin
 
 comment on a post (can be event, announcements)
   POST /comments (postId and postType darj kon dar body)
+
+
+
+
+
+
+Auth
+Blog
+
+
+
+
+------
+make announcement, article, event, comment controllers.
+  implement all the handlers. use user-controller and session-controller as an example
+read decorateWithAuth and decorateWith and understand how they work
+
+
