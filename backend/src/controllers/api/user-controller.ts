@@ -28,3 +28,4 @@ export default class UserController {
     res.send(updateUserResponse);
   }
 }
+

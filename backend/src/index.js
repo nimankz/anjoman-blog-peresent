@@ -1,68 +1,88 @@
-import express, { json, urlencoded } from 'express';
-import cors from 'cors';
-import path from 'path';
-import config from '@/config';
-
-import transporter from '@/domain/email/transporter';
-
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importStar(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const path_1 = __importDefault(require("path"));
+const config_1 = __importDefault(require("@/config"));
+const transporter_1 = __importDefault(require("@/domain/email/transporter"));
 // import EmailPreviewController from '@/controllers/email-preview-controller';
-import UserController from '@/controllers/api/user-controller';
-import SessionController from '@/controllers/api/session-controller';
+const user_controller_1 = __importDefault(require("@/controllers/api/user-controller"));
 // import PassResetController from '@/controllers/api/pass-reset-controller';
 // import MembershipController from '@/controllers/api/membership-controller';
 // import OrganizationController from '@/controllers/api/organization-controller';
-
-import AuthService from '@/services/auth_service';
+const auth_service_1 = __importDefault(require("@/services/auth_service"));
 // import OrgsService from '@/domain/orgs/orgs-service';
-import EmailService from '@/domain/email/email-service';
-import BlogService from '@/services/blog_service';
-import { auth } from 'google-auth-library';
-
-
-const app = express();
-app.use(cors({
-  origin: '*', // Allow all origins in development
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+const email_service_1 = __importDefault(require("@/domain/email/email-service"));
+const blog_service_1 = __importDefault(require("@/services/blog_service"));
+const app = (0, express_1.default)();
+app.use((0, cors_1.default)({
+    origin: '*', // Allow all origins in development
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(json());
-app.use(urlencoded({ extended: true }));
+app.use((0, express_1.json)());
+app.use((0, express_1.urlencoded)({ extended: true }));
 // app.use(requestLoggerMiddleware);
-
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-
-const emailService = new EmailService(transporter);
-const authService = new AuthService(emailService);
-const blogService = new BlogService();
-
+app.set('views', path_1.default.join(__dirname, 'views'));
+const emailService = new email_service_1.default(transporter_1.default);
+const authService = new auth_service_1.default(emailService);
+const blogService = new blog_service_1.default();
 // const orgsService = new OrgsService(emailService);
-
 // const emailPreviewController = new EmailPreviewController(emailService);
-
-const userController = new UserController(authService);
+const userController = new user_controller_1.default(authService);
 // const sessionController = new SessionController(authService);
 // const passResetController = new PassResetController(authService);
 // const membershipController = new MembershipController(orgsService);
 // const organizationController = new OrganizationController(orgsService);
-
 // app.use('/', emailPreviewController.router);
-
 app.use('/api', [
-  userController.router,
-//   sessionController.router,
-//   passResetController.router,
-//   membershipController.router,
-//   organizationController.router
+    userController.router,
+    //   sessionController.router,
+    //   passResetController.router,
+    //   membershipController.router,
+    //   organizationController.router
 ]);
-
-
 // app.get('/', async (req, res) => {
 //   // const result = await test(1, 2);
 //   res.send({ health: 'ok' });
 // });
-
 // //signup
 // app.post('/signup', async (req, res) => {
 //   try {
@@ -78,9 +98,6 @@ app.use('/api', [
 //   const allUsers = await seeAllUsers();
 //   res.status(200).send({ allUsers });
 // });
-
-
-
 // // announcements
 // app.get('/announcements', async (req, res) => {
 //   const allAnnouncements = await announcementsForAll();
@@ -90,7 +107,6 @@ app.use('/api', [
 //   const announcement = await showAnnouncement(req.params.announcement_id);
 //   res.status(200).send({ announcement });
 // });
-
 // app.post('/announcements', async (req, res) => {
 //   const { title, content } = req.body;
 //   if (!title || !content) {
@@ -102,7 +118,6 @@ app.use('/api', [
 //   }
 //   res.status(201).send({ announcement });
 // });
-
 // app.delete('/announcements/:announcement_id', async (req, res) => {
 //   const { announcement_id } = req.params;
 //   if (!announcement_id) {
@@ -114,7 +129,6 @@ app.use('/api', [
 //   }
 //   res.status(200).send({ message: 'Announcement deleted successfully' });
 // });
-
 // app.put('/announcements/:announcement_id', async (req, res) => {
 //   const { announcement_id } = req.params;
 //   const { title, content } = req.body;
@@ -127,7 +141,6 @@ app.use('/api', [
 //   }
 //   res.status(200).send({ announcement });
 // });
-
 // //event
 // app.get('/events', async (req, res) => {
 //   const allEvents = await showAllEvents();
@@ -178,7 +191,6 @@ app.use('/api', [
 //   }
 //   res.status(200).send({ event });
 // });
-
 // //articles
 // app.post('/articles', async (req, res) => {
 //   const { title, content } = req.body;
@@ -191,31 +203,25 @@ app.use('/api', [
 //   }
 //   res.status(201).send({ article });
 // });
-
 // app.get('/articles', async (req, res) => {
 //   const status = req.query.status as ArticleStatus;
 //   const allArticles = await showAllArticles(status);
 //   res.status(200).send({ allArticles });
 // });
-
 // app.put('/articles/:article_id', async (req, res) => {
 //   const { article_id } = req.params;
 //   const { status } = req.body;
 //   const article = await updateArticle(article_id, status);
 //   res.status(200).send({ article });
 // });
-
-
-app.listen(config.PORT, () => {
-  console.log(`Server is running on http://localhost:${config.PORT}`);
+app.listen(config_1.default.PORT, () => {
+    console.log(`Server is running on http://localhost:${config_1.default.PORT}`);
 });
-
 process.on('uncaughtException', err => {
-  console.error(err)
-  console.log(`Uncaught Exception: ${err.message}`)
-  process.exit(1)
-})
-
+    console.error(err);
+    console.log(`Uncaught Exception: ${err.message}`);
+    process.exit(1);
+});
 process.on('exit', code => {
-  console.log(`Process exited with code: ${code}`)
-})
+    console.log(`Process exited with code: ${code}`);
+});
