@@ -50,6 +50,7 @@ export default class AnnouncementController {
     res.json(comments).status(200);
   }
 
+
   private handleGetAnnouncement = async (req: Request, res: Response) => {
     const { id } = req.params;
     const announcement = await this.blogService.showAnnouncement(id);
