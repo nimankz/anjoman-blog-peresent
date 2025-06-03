@@ -22,8 +22,8 @@ type HostName = 'API_GATEWAY' | ServiceName;
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 const baseUrls = {
-  API_GATEWAY: getConfig().publicRuntimeConfig.FRONTEND_BASE_URL,
-  IDENTITY: getConfig().serverRuntimeConfig.IDENTITY_BASE_URL,
+  API_GATEWAY: "http://localhost:3000",
+  IDENTITY: "http://localhost:4000",
 };
 
 export class ApiError extends Error {

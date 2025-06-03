@@ -1,11 +1,13 @@
+import { Box, Button, Anchor } from '@mantine/core';
 import { Welcome } from '@/components/Welcome/Welcome';
-import { ColorSchemeToggle } from '@/components/ColorSchemeToggle/ColorSchemeToggle';
 
 export default function HomePage() {
   return (
-    <>
+    <Box ta="center">
       <Welcome />
-      <ColorSchemeToggle />
-    </>
+      <Anchor href="/login">
+        <Button variant="filled">Get Started</Button>
+      </Anchor>
+    </Box>
   );
 }

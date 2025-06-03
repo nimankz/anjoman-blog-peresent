@@ -11,16 +11,16 @@ import ArticleController from "@/controllers/api/article-controller";
 import EventController from "@/controllers/api/event-controller";
 
 
-// import SessionController from '@/controllers/api/session-controller';
-// import EmailPreviewController from '@/controllers/email-preview-controller';
-// import PassResetController from '@/controllers/api/pass-reset-controller';
-// import MembershipController from '@/controllers/api/membership-controller';
-// import OrganizationController from '@/controllers/api/organization-controller';
+import SessionController from '@/controllers/api/session-controller';
+import EmailPreviewController from '@/controllers/email-preview-controller';
+import PassResetController from '@/controllers/api/pass-reset-controller';
+import MembershipController from '@/controllers/api/membership-controller';
+import OrganizationController from '@/controllers/api/organization-controller';
 
 
 
 //services
-// import OrgsService from '@/domain/orgs/orgs-service';
+import OrgsService from '@/domain/orgs/orgs-service';
 import AuthService from '@/services/auth_service';
 import EmailService from '@/domain/email/email-service';
 import BlogService from '@/services/blog_service';
@@ -47,22 +47,18 @@ const emailService = new EmailService(transporter);
 const authService = new AuthService(emailService);
 const blogService = new BlogService();
 
-// const orgsService = new OrgsService(emailService);
-// const emailPreviewController = new EmailPreviewController(emailService);
+const orgsService = new OrgsService(emailService);
+const emailPreviewController = new EmailPreviewController(emailService);
 
 const userController = new UserController(authService);
 const announcementController = new AnnouncementController(blogService);
 const articleController = new ArticleController(blogService);
 const eventController = new EventController(blogService);
 
-// const sessionController = new SessionController(authService);
-// const passResetController = new PassResetController(authService);
-// const membershipController = new MembershipController(orgsService);
-// const organizationController = new OrganizationController(orgsService);
-
-
-
-
+const sessionController = new SessionController(authService);
+const passResetController = new PassResetController(authService);
+const membershipController = new MembershipController(orgsService);
+const organizationController = new OrganizationController(orgsService);
 
 
 // Define the user router with all the controllers
@@ -70,18 +66,16 @@ const userRouter = [
   userController.router,
   announcementController.router,
   articleController.router,
-  eventController.router
-//   sessionController.router,
-//   passResetController.router,
-//   membershipController.router,
-//   organizationController.router
+  eventController.router,
+  sessionController.router,
+  passResetController.router,
+  membershipController.router,
+  organizationController.router
 ];
 
 
 app.use('/api', userRouter);
-
-
-// app.use('/', emailPreviewController.router);
+app.use('/', emailPreviewController.router);
 
 // app.get('/', async (req, res) => {
 //   // const result = await test(1, 2);

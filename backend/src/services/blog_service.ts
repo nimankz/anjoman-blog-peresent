@@ -88,14 +88,15 @@ export default class BlogService {
   }
 
 
-  public async createNewEvent(name: string, content: string, date: Date) {
-    const user = await getLoggedInUser();
+  public async createNewEvent(userId: string, name: string, content: string, date: Date) {
+    console.log('Creating new event with userId:', userId);
+    // const user = await getLoggedInUser();
     const event = await prisma.event.create({
       data: {
+        userId,
         name,
         content,
         date,
-        userId: user.id
       }});
     return event
   }
@@ -110,12 +111,12 @@ export default class BlogService {
     return event;
   }
 
-  
+
   public async deleteEvent(eventId: string) {
     const myuser = await getLoggedInUser();
     if (myuser.role !== UserRole.ADMIN) {
       throw new Error('Unauthorized');
-    } 
+    }
     else {
     const event = await prisma.event.delete({
       where: {
@@ -125,7 +126,7 @@ export default class BlogService {
     return event;}
   }
 
-  
+
   public async updateEvent(eventId: string, name: string, content: string) {
     // Ensure that the event exists before updating
     const existingEvent = await prisma.event.findUnique({
@@ -143,7 +144,7 @@ export default class BlogService {
     }
     else if (myuser.role === UserRole.ADMIN) {
     // Proceed with the update if the user is an admin
-    
+
     const event = await prisma.event.update({
       where: {
         id: eventId,
@@ -155,7 +156,7 @@ export default class BlogService {
     });
     return event;}
   }
-  
+
 
 
   //articles
@@ -240,7 +241,7 @@ export default class BlogService {
       throw new Error('Unauthorized');
     }
     else if (myuser.role === UserRole.ADMIN) {
-    
+
     const article = await prisma.article.delete({
       where: {
         id: articleId,
