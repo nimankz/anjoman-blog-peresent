@@ -1,0 +1,107 @@
+@startchen
+left to right direction
+
+entity User {
+  id <<key>>
+  email <<unique>>
+  role
+  source
+  hashedPassword
+  firstName
+  lastName
+  onboarded
+  emailConfirmed
+  createdAt
+  updatedAt
+}
+
+entity Article {
+  id <<key>>
+  title
+  content
+  status
+  userId <<foreign>>
+  createdAt
+}
+
+entity Announcement {
+  id <<key>>
+  title
+  content
+  userId <<foreign>>
+  createdAt
+}
+
+entity Event {
+  id <<key>>
+  name
+  date
+  content
+  userId <<foreign>>
+  createdAt
+}
+
+entity Comment {
+  id <<key>>
+  title
+  content
+  userId <<foreign>>
+  articleId <<foreign>>
+  announcementId <<foreign>>
+  eventId <<foreign>>
+  createdAt
+  updatedAt
+}
+
+entity Source {
+  SELF_SIGNUP
+  INVITATION
+}
+
+entity UserRole {
+  ADMIN
+  USER
+}
+
+entity ArticleStatus {
+  SUBMITTED
+  REJECTED
+  ACCEPTED
+}
+
+relationship Creates {
+}
+
+Creates =1= User
+Creates -N- Article
+Creates -N- Announcement
+Creates -N- Event
+
+relationship CommentsOn {
+}
+
+CommentsOn =1= User
+CommentsOn -N- Comment
+CommentsOn =1= Article
+CommentsOn =1= Announcement
+CommentsOn =1= Event
+
+relationship HasSource {
+}
+
+HasSource =1= Source
+HasSource -N- User
+
+relationship HasRole {
+}
+
+HasRole =1= UserRole
+HasRole -N- User
+
+relationship HasStatus {
+}
+
+HasStatus =1= ArticleStatus
+HasStatus -N- Article
+
+@endchen

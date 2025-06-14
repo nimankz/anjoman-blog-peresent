@@ -1,0 +1,27 @@
+@startuml
+actor User
+participant "System" as Sys
+participant "Database" as DB
+actor Admin
+
+User -> Sys: Login(email, password)
+Sys -> DB: Verify credentials
+DB --> Sys: Credentials valid
+Sys --> User: Login successful
+
+User -> Sys: Submit Article(title, content)
+Sys -> DB: Save Article(status=SUBMITTED)
+DB --> Sys: Article saved
+Sys --> User: Submission confirmed
+
+Sys -> Admin: Notify new article
+Admin -> Sys: Review Article(id)
+Sys -> DB: Fetch Article
+DB --> Sys: Article details
+Sys --> Admin: Display Article
+
+Admin -> Sys: Approve/Reject Article(id, status)
+Sys -> DB: Update Article(status=ACCEPTED/REJECTED)
+DB --> Sys: Status updated
+Sys --> User: Notify approval/rejection
+@enduml

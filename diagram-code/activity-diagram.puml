@@ -1,0 +1,30 @@
+@startuml
+start
+:User logs in;
+if (Is user authenticated?) then (yes)
+  :User creates article;
+  :User submits article;
+  :System validates article;
+  if (Is article valid?) then (yes)
+    :Set article status to SUBMITTED;
+    :Notify admin;
+    :Admin reviews article;
+    if (Is article approved?) then (yes)
+      :Set article status to ACCEPTED;
+      :Publish article;
+      :Notify user of approval;
+    else (no)
+      :Set article status to REJECTED;
+      :Notify user of rejection;
+    endif
+  else (no)
+    :Show validation errors;
+    :User edits article;
+    detach
+  endif
+else (no)
+  :Show login error;
+  stop
+endif
+stop
+@enduml

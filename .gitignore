@@ -1,0 +1,4 @@
+*.DS_Store
+backend/src/*.js
+frontend/src/*.js
+

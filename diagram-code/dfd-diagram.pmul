@@ -1,0 +1,9 @@
+@startuml !define RECTANGLE entity !define CIRCLE circle !define STORAGE database
+
+RECTANGLE "User" as User RECTANGLE "Admin" as Admin CIRCLE "Blog System" as Sys STORAGE "Database" as DB
+
+User --> Sys : Submit Article(title, content) Sys --> DB : Store Article DB --> Sys : Article Saved Sys --> User : Submission Confirmation
+
+Sys --> Admin : New Article Notification Admin --> Sys : Review Decision(status) Sys --> DB : Update Article Status DB --> Sys : Status Updated Sys --> User : Approval/Rejection Notification
+
+@enduml
