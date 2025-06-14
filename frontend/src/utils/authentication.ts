@@ -42,14 +42,14 @@ export const withAuth = <T, P extends T & WithAuthPageProps>(
       };
     }
 
-    if (!store.getState().user.onboarded && context.resolvedUrl !== '/onboarding') {
-      return {
-        redirect: {
-          destination: '/onboarding',
-          permanent: false,
-        },
-      };
-    }
+    // if (!store.getState().user.onboarded && context.resolvedUrl !== '/onboarding') {
+    //   return {
+    //     redirect: {
+    //       destination: '/onboarding',
+    //       permanent: false,
+    //     },
+    //   };
+    // }
 
     const result = await gssp(context, store);
     const resultProps = 'props' in result ? result.props : {};

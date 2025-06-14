@@ -1,12 +1,12 @@
 import BlogService from "@/services/blog_service";
 import { Request, Response, Router } from 'express';
-
+import { decorateWithAuth } from '@/utils';
 
 export default class EventController {
     constructor(private blogService: BlogService) {
         this.router = Router();
-        this.router.get('/events', this.handleGetEvents);
-        this.router.post('/events', this.handlePostEvent);
+        this.router.get('/events', decorateWithAuth(this.handleGetEvents));
+        this.router.post('/events', decorateWithAuth(this.handlePostEvent));
         this.router.get('/events/:id', this.handleGetEvent);
         this.router.delete('/events/:id', this.handleDeleteEvent);
         this.router.put('/events/:id', this.handleUpdateEvent);
@@ -14,51 +14,52 @@ export default class EventController {
         this.router.post('/events/newComment', this.createNewCommentEvent);
     }
     public router: Router;
-    
+
     private handleGetEvents = async (req: Request, res: Response) => {
         const events = await this.blogService.showAllEvents();
         res.json(events).status(200);
     }
 
-    
-    private handlePostEvent = async (req: Request, res: Response) => {
+
+    private handlePostEvent = async (req: Request, res: Response, userId: string) => {
         const { title, content, date } = req.body;
         if (!title || !content || !date) {
-            return res.status(400).send({ error: 'Title, content, and date are required' });
+            res.status(400).send({ error: 'Title, content, and date are required' });
+        } else {
+            const event = await this.blogService.createNewEvent(userId, title, content, new Date(date));
+            res.json(event).status(201);
         }
-        const event = await this.blogService.createNewEvent(title, content, date);
-        res.json(event).status(201);
     }
 
-    
+
     private handleGetEvent = async (req: Request, res: Response) => {
         const { id } = req.params;
         const event = await this.blogService.showSingleEvent(id);
         if (!event) {
-            return res.status(404).send({ error: 'Event not found' });
+            res.status(404).send({ error: 'Event not found' });
         }
         res.json(event).status(200);
     }
 
-    
+
     private handleDeleteEvent = async (req: Request, res: Response) => {
         const { id } = req.params;
         const event = await this.blogService.deleteEvent(id);
         res.json(event).status(200);
     }
 
-    
+
     private handleUpdateEvent = async (req: Request, res: Response) => {
         const { id } = req.params;
         const { title, content } = req.body;
         if (!title || !content) {
-            return res.status(400).send({ error: 'Title and content are required' });
+            res.status(400).send({ error: 'Title and content are required' });
         }
         const event = await this.blogService.updateEvent(id, title, content);
         res.json(event).status(200);
     }
 
-    
+
     private handelAllEventComments = async (req: Request, res: Response) => {
         const { id } = req.params;
         const comments = await this.blogService.showAllEventComments(id);
@@ -68,7 +69,7 @@ export default class EventController {
         res.json(comments).status(200);
     }
 
-    
+
     private createNewCommentEvent = async (req: Request, res: Response) => {
         const { eventId, content, title } = req.body;
         if (!eventId || !content) {

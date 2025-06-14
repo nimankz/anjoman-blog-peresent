@@ -51,7 +51,7 @@ export default function Login() {
         if (encodedDst) {
           window.location.href = atob(decodeURIComponent(encodedDst));
         } else {
-          window.location.href = '/organizations?enter_default=true';
+          window.location.href = '/dashboard';
         }
       } catch (_error) {
         window.location.href = '/organizations?enter_default=true';
